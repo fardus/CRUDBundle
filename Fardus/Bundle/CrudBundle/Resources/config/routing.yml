@@ -1,0 +1,10 @@
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+fardus_crud_delete:
+    path:  /crud-delete/{entity}/{id}
+    defaults: { _controller: "FardusCrudBundle:Api:delete" }
+    requirements:
+        methods: DELETE
+    options:
+        expose: true

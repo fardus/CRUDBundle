@@ -1,0 +1,14 @@
+{% block extends %}
+{{ "{% extends '" ~ bundle ~ ":" ~ entity ~ ":common.html.twig' %}" }}
+{% endblock extends %}
+
+{{ "\{% set title = 'Delete " ~ entity ~ "\\'s entry'|trans %\}" }}
+
+{{"{% block errors %}\{\{ form_errors(delete_form) \}\}{% endblock errors %}" }}
+
+{% block body %}
+{{ "{% block body %}" }}
+<p class="alert alert-danger">{{"{% trans with {'%entity%': '" ~ entity ~ "'} %}"}}Please confirm you want to delete this %entity%'s entry.{{"{% endtrans %}"}}</p>
+{{ "\{\{ form(delete_form) \}\}" }}
+{{ "{% endblock %}" }}
+{% endblock body %}

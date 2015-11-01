@@ -1,0 +1,53 @@
+    /**
+{% block phpdoc_method_header %}
+     * Edits an existing {{ entity }} entity.
+{% endblock phpdoc_method_header %}
+     *
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/{id}", name="{{ route_name_prefix }}_update")
+     * @Method("PUT")
+     * @Template("{{ bundle }}:{{ entity }}:edit.html.twig")
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function updateAction(Request $request, $id)
+{% endblock method_definition %}
+    {
+{% block method_body %}
+        $manager = $this->getDoctrine()->getManager();
+
+        ${{ entity|lower }} = $manager->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+
+        if (!${{ entity|lower }}) {
+            throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
+        }
+
+        $editForm = $this->createEditForm(${{ entity|lower }});
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {
+            $manager->flush();
+            
+            $this->get('session')->getFlashBag()->add(
+                'success', 'The {{ entity }} has been updated.');
+            
+            return $this->redirect($this->generateUrl('{{ route_name_prefix }}_show', array('id' => $id)));
+        }
+{% endblock method_body %}
+
+{% block method_return %}
+{% if 'annotation' == format %}
+        return array(
+            '{{ entity|lower }}'      => ${{ entity|lower }},
+            'edit_form'   => $editForm->createView(),
+        );
+{% else %}
+        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:edit.html.twig', array(
+            '{{ entity|lower }}'      => ${{ entity|lower }},
+            'edit_form'   => $editForm->createView(),
+        ));
+{% endif %}
+{% endblock method_return %}
+    }

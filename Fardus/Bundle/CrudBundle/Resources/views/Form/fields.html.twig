@@ -1,0 +1,94 @@
+{% block form_row %}
+    <div class="form-group">
+        {{ form_errors(form) }}
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+    </div>
+{% endblock form_row %}
+
+{% block number_widget %}
+    <input type="number" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} />
+{% endblock number_widget %}
+
+{% block integer_widget %}
+    <input type="number" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} />
+{% endblock integer_widget %}
+
+{% block email_widget %}
+    <input type="email" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} />
+{% endblock email_widget %}
+
+{% block text_widget %}
+    <input type="text" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} />
+{% endblock text_widget %}
+
+{% block password_widget %}
+    <input type="password" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} />
+{% endblock password_widget %}
+
+{% block textarea_widget %}
+    <textarea type="text" class="form-control" {{ block('widget_attributes') }}>{% if value is not empty %}{{ value }}{% endif %}</textarea>
+{% endblock textarea_widget %}
+
+{% block choice_widget_collapsed %}
+    <select class="form-control" {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+        {% if empty_value is not none %}
+            <option value="">{{ empty_value|trans({}, translation_domain) }}</option>
+        {% endif %}
+        {% if preferred_choices|length > 0 %}
+            {% set options = preferred_choices %}
+            {{ block('choice_widget_options') }}
+            {% if choices|length > 0 and separator is not none %}
+                <option disabled="disabled">{{ separator }}</option>
+            {% endif %}
+        {% endif %}
+        {% set options = choices %}
+        {{ block('choice_widget_options') }}
+    </select>
+{% endblock choice_widget_collapsed %}
+
+{% block button_widget %}
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" {{ block('button_attributes') }}>{{ label }}</button>
+    </div>
+{% endblock button_widget %}
+
+{% block form_widget_simple %}
+    {% spaceless %}
+        {% set type = type|default('text') %}
+        <input class="form-control" type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    {% endspaceless %}
+{% endblock form_widget_simple %}
+
+{% block date_widget %}
+    {% spaceless %}
+        <div class="form-inline">
+            {% if widget == 'single_text' %}
+                {{ block('form_widget_simple') }}
+            {% else %}
+                <div {{ block('widget_container_attributes') }}>
+                    {{ date_pattern|replace({
+                '{{ year }}':  form_widget(form.year),
+                    '{{ month }}': form_widget(form.month),
+                    '{{ day }}':   form_widget(form.day),
+                    })|raw }}
+                </div>
+            {% endif %}
+        </div>
+    {% endspaceless %}
+{% endblock date_widget %}
+
+{% block time_widget %}
+    {% spaceless %}
+        <div class="form-inline">
+            {% if widget == 'single_text' %}
+                {{ block('form_widget_simple') }}
+            {% else %}
+                {% set vars = widget == 'text' ? { 'attr': { 'size': 1 }} : {} %}
+                <div {{ block('widget_container_attributes') }}>
+                    {{ form_widget(form.hour, vars) }}{% if with_minutes %}:{{ form_widget(form.minute, vars) }}{% endif %}{% if with_seconds %}:{{ form_widget(form.second, vars) }}{% endif %}
+                </div>
+            {% endif %}
+        </div>
+    {% endspaceless %}
+{% endblock time_widget %}

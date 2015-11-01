@@ -1,0 +1,74 @@
+    /**
+{% block phpdoc_method_header %}
+     * Creates a new {{ entity }} entity.
+{% endblock phpdoc_method_header %}
+     *
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/", name="{{ route_name_prefix }}_create")
+     * @Method("POST")
+     * @Template("{{ bundle }}:{{ entity }}:new.html.twig")
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function createAction(Request $request)
+{% endblock method_definition %}
+    {
+{% block method_body %}
+        ${{ entity|lower }} = new {{ entity_class }}();
+        $form = $this->createCreateForm(${{ entity|lower }});
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist(${{ entity|lower }});
+            $manager->flush();
+            
+            $this->get('session')->getFlashBag()->add(
+                'success', 'The {{ entity }} has been created.');
+
+            {% if 'show' in actions -%}
+                return $this->redirect($this->generateUrl('{{ route_name_prefix }}_show', array('id' => ${{ entity|lower }}->getId())));
+            {%- else -%}
+                return $this->redirect($this->generateUrl('{{ route_name_prefix }}'));
+            {%- endif %}
+
+        }
+{% endblock method_body %}
+
+{% block method_return %}
+{% if 'annotation' == format %}
+        return array(
+            '{{ entity|lower }}' => ${{ entity|lower }},
+            'form'   => $form->createView(),
+        );
+{% else %}
+        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:new.html.twig', array(
+            '{{ entity|lower }}' => ${{ entity|lower }},
+            'form'   => $form->createView(),
+        ));
+{% endif %}
+{% endblock method_return %}
+    }
+
+{% block form %}
+    /**
+    * Creates a form to create a {{ entity }} entity.
+    *
+    * @param {{ entity_class }} ${{ entity|lower }} The entity
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createCreateForm({{ entity_class }} ${{ entity|lower }})
+    {
+        $form = $this->createForm(new {{ entity_class }}Type(), ${{ entity|lower }}, array(
+            'action' => $this->generateUrl('{{ route_name_prefix }}_create'),
+            'method' => 'POST',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Create'));
+
+        return $form;
+    }
+{% endblock form %}

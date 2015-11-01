@@ -1,0 +1,53 @@
+
+    /**
+{% block phpdoc_method_header %}
+     * Redirect the the list URL with the search parameter.
+     * @param \Symfony\Component\HttpFoundation\Request $request
+{% endblock phpdoc_method_header %}
+     *
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/search", name="{{ route_name_prefix }}_search")
+     * @Method("POST")
+     * @Template()
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function searchAction(Request $request)
+{% endblock method_definition %}
+    {
+{% block method_body %}
+    $all = $request->request->all();
+{% endblock method_body %}
+
+{% block method_return %}
+    return $this->redirect($this->generateUrl('{{ route_name_prefix }}', array(
+                'page'   => 1,
+                'search' => urlencode($all['form']['q']),
+    )));
+{% endblock method_return %}
+    }
+
+{% block form %}
+    /**
+    * Creates a form to search {{ entity }} entities.
+    *
+    * @param string $q
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createSearchForm($q = "")
+    {
+        $data = array('q' => $q);
+        return $this->createFormBuilder($data)
+                ->setAction($this->generateUrl('{{ route_name_prefix }}_search'))
+                ->setMethod('post')
+                ->add('q', 'search', array(
+                    'label' => FALSE,
+                ))
+                ->add('submit', 'submit', array('label' => 'Search'))
+                ->getForm()
+        ;
+    }
+{% endblock form %}

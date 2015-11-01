@@ -1,0 +1,65 @@
+
+    /**
+{% block phpdoc_method_header %}
+     * Displays a form to edit an existing {{ entity }} entity.
+{% endblock phpdoc_method_header %}
+     *
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/{id}/edit", name="{{ route_name_prefix }}_edit")
+     * @Method("GET")
+     * @Template()
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function editAction($id)
+{% endblock method_definition %}
+    {
+{% block method_body %}
+        $manager = $this->getDoctrine()->getManager();
+
+        ${{ entity|lower }} = $manager->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+
+        if (!${{ entity|lower }}) {
+            throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
+        }
+
+        $editForm = $this->createEditForm(${{ entity|lower }});
+{% endblock method_body %}
+
+{% block method_return %}
+{% if 'annotation' == format %}
+        return array(
+            '{{ entity|lower }}'      => ${{ entity|lower }},
+            'edit_form'   => $editForm->createView(),
+        );
+{% else %}
+        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:edit.html.twig', array(
+            '{{ entity|lower }}'      => ${{ entity|lower }},
+            'edit_form'   => $editForm->createView(),
+        ));
+{% endif %}
+{% endblock method_return %}
+    }
+
+{% block form %}
+    /**
+    * Creates a form to edit a {{ entity }} entity.
+    *
+    * @param {{ entity_class }} ${{ entity|lower }} The entity
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createEditForm({{ entity_class }} ${{ entity|lower }})
+    {
+        $form = $this->createForm(new {{ entity_class }}Type(), ${{ entity|lower }}, array(
+            'action' => $this->generateUrl('{{ route_name_prefix }}_update', array('id' => ${{ entity|lower }}->getId())),
+            'method' => 'PUT',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Update'));
+
+        return $form;
+    }
+{% endblock form %}

@@ -1,0 +1,31 @@
+{% block extends %}
+    {{ "{% extends '" ~ bundle ~ ":" ~ entity ~ ":common.html.twig' %}" }}
+{% endblock extends %}
+
+{{ "\{% set title = '" ~ entity ~ "'|trans %\}" }}
+
+{% block body %}
+    {{ "{% block body %}" }}
+    {%- for field, metadata in fields %}
+
+    <div class="crud-field">
+        <div class="crud-field-label">{{ '\{\% trans \%\}' }}{{ field|capitalize }}{{ '\{\% endtrans \%\}' }}</div>
+        <div class="crud-field-value">
+            {%- if metadata.type in ['date', 'datetime'] %}
+
+            {{ '{% if ' ~ entity|lower ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity|lower ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% else %}-{% endif %}' }}
+
+            {%- else %}
+
+            {{ '{{ ' ~ entity|lower ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}
+
+            {%- endif %}
+
+        </div>
+    </div>
+
+    {%- endfor %}
+
+
+    {{ "{% endblock %}" }}
+{% endblock body %}

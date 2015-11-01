@@ -1,0 +1,40 @@
+
+    /**
+{% block phpdoc_method_header %}
+     * Finds and displays a {{ entity }} entity.
+{% endblock phpdoc_method_header %}
+     *
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/{id}", name="{{ route_name_prefix }}_show")
+     * @Method("GET")
+     * @Template()
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function showAction($id)
+{% endblock method_definition %}
+    {
+{% block method_body %}
+        $manager = $this->getDoctrine()->getManager();
+
+        ${{ entity|lower }} = $manager->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+
+        if (!${{ entity|lower }}) {
+            throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
+        }
+{% endblock method_body %}
+
+{% block method_return %}
+{% if 'annotation' == format %}
+        return array(
+            '{{ entity|lower }}'      => ${{ entity|lower }},
+        );
+{% else %}
+        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
+            '{{ entity|lower }}'      => ${{ entity|lower }},
+        ));
+{% endif %}
+{% endblock method_return %}
+    }

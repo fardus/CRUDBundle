@@ -1,0 +1,91 @@
+
+    /**
+{% block phpdoc_method_header %}
+     * Lists all {{ entity }} entities.
+{% endblock phpdoc_method_header %}
+     *
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/list/{page}/{search}", name="{{ route_name_prefix }}", requirements={defaults={"page" = 1, "search" = ""})
+     * @Route("/", name="{{ route_name_prefix }}_root", defaults={"page" = 1})
+     * @Method("GET")
+     * @Template()
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function indexAction($page = 1, $search = "")
+{% endblock method_definition %}
+    {
+{% block method_body %}
+        $manager = $this->getDoctrine()->getManager();
+        
+        // Escape special characters and decode the search value.
+        $search = addcslashes(urldecode($search), '%_');
+        
+        // Get the total entries.
+        $count = $manager
+            ->getRepository('{{ bundle }}:{{ entity }}')
+            ->createQueryBuilder('e')
+            ->select('COUNT(e)'){% set firstField = TRUE %}
+            {%- for field, metadata in fields -%}
+                {%- if field|replace({'_': ''}) != "id" and metadata.type not in ['date', 'datetime'] -%}
+                    {%- if firstField %}{% set firstField = FALSE %}
+
+            ->where('e.{{ field|replace({'_': ''}) }} LIKE :{{ field|replace({'_': ''}) }}')
+                    {%- else %}
+
+            ->orWhere('e.{{ field|replace({'_': ''}) }} LIKE :{{ field|replace({'_': ''}) }}')
+                    {%- endif %}
+
+            ->setParameter(':{{ field|replace({'_': ''}) }}', '%' . $search . '%')
+                {%- endif -%}
+            {%- endfor %}
+
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+
+        // Define the number of pages.
+        $pages = ceil($count / 20);
+        
+        // Get the entries of current page.
+        ${{ entity|lower }}List = $manager
+            ->getRepository('{{ bundle }}:{{ entity }}')
+            ->createQueryBuilder('e'){% set firstField = TRUE %}
+            {%- for field, metadata in fields -%}
+                {%- if field|replace({'_': ''}) != "id" and metadata.type not in ['date', 'datetime'] -%}
+                    {%- if firstField %}{% set firstField = FALSE %}
+
+            ->where('e.{{ field|replace({'_': ''}) }} LIKE :{{ field|replace({'_': ''}) }}')
+            {% else %}
+            
+            ->orWhere('e.{{ field|replace({'_': ''}) }} LIKE :{{ field|replace({'_': ''}) }}')
+            {% endif %}->setParameter(':{{ field|replace({'_': ''}) }}', '%' . $search . '%'){% endif %}
+            {% endfor%}
+                
+            ->setFirstResult(($page - 1) * 20)
+            ->setMaxResults(20)
+            ->getQuery()
+            ->getResult()
+        ;
+{% endblock method_body %}
+
+{% block method_return %}
+{% if 'annotation' == format %}
+        return array(
+            '{{ entity|lower }}List' => ${{ entity|lower }}List,
+            'pages' => $pages,
+            'page' => $page,
+        );
+{% else %}
+        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:index.html.twig', array(
+            '{{ entity|lower }}List' => ${{ entity|lower }}List,
+            'pages' => $pages,
+            'page' => $page,
+            'search' => stripslashes($search),
+            'searchForm' => $this->createSearchForm(stripslashes($search))->createView(),
+        ));
+{% endif %}
+{% endblock method_return %}
+    }

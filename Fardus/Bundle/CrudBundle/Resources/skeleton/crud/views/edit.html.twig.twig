@@ -1,0 +1,15 @@
+{% block extends %}
+{{ "{% extends '" ~ bundle ~ ":" ~ entity ~ ":common.html.twig' %}" }}
+{% endblock extends %}
+
+{{ "\{% set title = '" ~ entity ~ " edit'|trans %\}" }}
+
+{{"{% block errors %}\{\{ form_errors(edit_form) \}\}{% endblock errors %}" }}
+
+{% block body %}
+{{ "{% block body %}" }}
+
+    {{ "\{\{ form(edit_form) \}\}" }}
+
+{{ "{% endblock %}" }}
+{% endblock body %}

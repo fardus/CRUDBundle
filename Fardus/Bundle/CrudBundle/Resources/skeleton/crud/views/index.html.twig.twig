@@ -1,0 +1,81 @@
+{% block extends %}
+{{ "{% extends '" ~ bundle ~ ":" ~ entity ~ ":common.html.twig' %}" }}
+{% endblock extends %}
+
+{{ "\{% set title = '" ~ entity ~ " list'|trans %\}" }}
+
+{% block body %}
+{{ "{% block body -%}" }}
+<div class="panel panel-default">
+    <div class="panel-body search-form">
+        {{'{{'}} form(searchForm) {{'}}'}}
+    </div>
+    <table class="table table-striped table-hover table-responsive">
+        <thead>
+            <tr>
+                {%- for field, metadata in fields %}
+
+                <th>{{"{% trans %}"}}{{ field|capitalize }}{{"{% endtrans %}"}}</th>
+
+                {%- endfor %}
+
+                <th><span class="glyphicon glyphicon-edit" title="{{"{% trans %}"}}Edit{{"{% endtrans %}"}}"></span></th>
+                <th><span class="glyphicon glyphicon-remove" title="{{"{% trans %}"}}Delete{{"{% endtrans %}"}}"></span></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ '{% for ' ~ entity|lower ~ ' in ' ~ entity|lower ~ 'List %}' }}
+            <tr>
+
+            {%- for field, metadata in fields %}
+                {%- if loop.first and ('show' in actions) %}
+
+                <td><a href="{{ "{{ path('" ~ route_name_prefix ~ "_show', { 'id': " ~ entity|lower ~ ".id }) }}" }}">{{ '{{ ' ~ entity|lower ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</a></td>
+
+                {%- elseif metadata.type in ['date', 'datetime'] %}
+
+                <td>{{ '{% if ' ~ entity|lower ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity|lower ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% else %}-{% endif %}' }}</td>
+
+                {%- else %}
+
+                <td><a href="{{ "{{ path('" ~ route_name_prefix ~ "_show', { 'id': " ~ entity|lower ~ ".id }) }}" }}">{{ '{{ ' ~ entity|lower ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</a></td>
+
+                {%- endif %}
+
+                {%- if loop.last %}
+
+                <td>
+                    <a href="{{"{{ path('" ~ route_name_prefix ~ "_edit', {'id': " ~ entity|lower ~ ".id}) }}"}}" title="{{"{% trans %}"}}Edit{{"{% endtrans %}"}}">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                </td>
+                <td>
+                    <a href="{{"{{ path('" ~ route_name_prefix ~ "_delete', {'id': " ~ entity|lower ~ ".id}) }}"}}" class="crud-entity-delete" title="{{"{% trans %}"}}Delete{{"{% endtrans %}"}}" data-entity="{{ bundle }}:{{ entity }}" data-id="{{ '\{\{ ' ~ entity|lower ~ '.id \}\}' }}">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </td>
+
+                {%- endif %}
+            {%- endfor %}
+
+            </tr>
+            {{ '{% endfor %}' }}
+        </tbody>
+    </table>
+
+    {{"{% if pages > 1 %}
+    <div class=\"panel-footer\">
+        {% include '" ~ bundle ~ "::fardus.crud.pagination.html.twig' with {
+            currentFilters: { 'search': search },
+            currentPage: page,
+            paginationPath: \"" ~ route_name_prefix ~ "\",
+            lastPage: pages,
+            showAlwaysFirstAndLast: true
+        } only %}
+    </div>
+    {% endif %}"}}
+</div>
+
+{{ "{% endblock body %}" }}
+
+{% endblock body %}
