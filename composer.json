@@ -1,12 +1,21 @@
 {
-    "name" : "fardus/crud-bundle",
-    "type" : "symfony-bundle",
-    "description" : "CRUD for Symfony project with bootstrap 3",
-    "keywords": ["crud", "symfony-bundle", "bootstrap3", "bootstrap", "command"],
-    "license": "MIT","authors": [{
-        "name": "Hamada Sidi Fahari",
-        "email": "h.fahari@gmail.com"
-    }],
+    "name": "fardus/crud-bundle",
+    "type": "symfony-bundle",
+    "description": "CRUD for Symfony project with bootstrap 3",
+    "keywords": [
+        "crud",
+        "symfony-bundle",
+        "bootstrap3",
+        "bootstrap",
+        "command"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hamada Sidi Fahari",
+            "email": "h.fahari@gmail.com"
+        }
+    ],
     "require": {
         "php": ">=5.3.9",
         "symfony/form": "~2.3|~3.0",
@@ -22,7 +31,9 @@
         "symfony/yaml": "~2.3|~3.0"
     },
     "autoload": {
-        "psr-4": { "Fardus\\Bundle\\CRUDBundle": "" }
+        "psr-4": {
+            "Fardus\\Bundle\\CRUDBundle\\": ""
+        }
     },
     "minimum-stability": "dev"
 }
