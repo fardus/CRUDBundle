@@ -13,7 +13,25 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
  */
 class FardusCrudGenerator extends DoctrineCrudGenerator
 {
+    /**
+     * @var BundleInterface
+     */
+    protected $bundle;
 
+    /**
+     * @var ClassMetadataInfo
+     */
+    protected $metadata;
+
+    /**
+     * @param \Symfony\Component\HttpKernel\Bundle\BundleInterface $bundle
+     * @param string                                               $entity
+     * @param \Doctrine\ORM\Mapping\ClassMetadataInfo              $metadata
+     * @param string                                               $format
+     * @param string                                               $routePrefix
+     * @param array                                                $needWriteActions
+     * @param                                                      $forceOverwrite
+     */
     public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions, $forceOverwrite)
     {
         $this->routePrefix = $routePrefix;
@@ -67,14 +85,20 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
         }
     }
 
+    /**
+     * copyBasicTemplates
+     */
     protected function copyBasicTemplates()
     {
         $dir = sprintf('%s/Resources/views', $this->bundle->getPath());
         $base = "$dir/fardus.crud.base.html.twig";
+
         if (!$this->filesystem->exists($base)) {
             $this->filesystem->copy(__DIR__. '/../Resources/views/base.html.twig', $base);
         }
+
         $pagination = "$dir/fardus.crud.pagination.html.twig";
+
         if (!$this->filesystem->exists($pagination)) {
             $this->filesystem->copy(__DIR__. '/../Resources/views/pagination.html.twig', $pagination);
         }
@@ -115,6 +139,7 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
     /**
      * Generates the controller class only.
      *
+     * @param bool $forceOverwrite
      */
     protected function generateControllerClass($forceOverwrite)
     {
@@ -149,14 +174,12 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
         ));
     }
 
-
-
     /**
      * Sets the configuration format.
      *
      * @param string $format The configuration format
      */
-    private function setFormat($format)
+    protected function setFormat($format)
     {
         switch ($format) {
             case 'yml':
