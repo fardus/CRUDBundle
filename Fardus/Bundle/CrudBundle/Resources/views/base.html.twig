@@ -4,13 +4,16 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{{ title }}</title>
-        <link rel="stylesheet" href="http://lib.fardus.com/bootstrap3/css/bootstrap.min.css">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-        <script src="http://lib.fardus.com/bootstrap3/js/bootstrap.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
+
     <body>
         <nav id="navbar" class="navbar navbar-default" role="navigation">
             <div class="container">
@@ -35,23 +38,28 @@
 
         <div class="container">
             {% block contextualMenu %}{% endblock contextualMenu %}
+
             <div class="page-header"><h1>{{ title|raw }}</h1></div>
+
             {% if block('errors') is not empty %}
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <div class="alert alert-danger">{% block errors %}{% endblock errors %}</div>
             {% endif %}
+
             {% if block('info') is not empty %}
-            <div class="alert alert-info">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                {% block info %}{% endblock info %}
-            </div>
+                <div class="alert alert-info">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {% block info %}{% endblock info %}
+                </div>
             {% endif %}
+
             {% for flashMessage in app.session.flashbag.get('success') %}
-            <div class="alert alert-success">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                {{ flashMessage|raw }}
-            </div><!-- div.alert -->
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ flashMessage|raw }}
+                </div><!-- div.alert -->
             {% endfor %}
+
             {% block body %}{% endblock body%}
         </div>
 
