@@ -2,34 +2,38 @@
 {{ "{% extends '" ~ bundle ~ "::fardus.crud.base.html.twig' %}" }}
 {% endblock extends %}
 
+{{'{% trans_default_domain "crud_common" %}'}}
+
 {{"{% block contextualMenu %}"}}
 
-{{"<div class=\"btn-group\">
-    <a href=\"{{ path('" ~ route_name_prefix ~ "') }}\" class=\"btn btn-default{%if '" ~ route_name_prefix ~ "' == app.request.attributes.get('_route')%} active{% endif %}\">
-        <span class=\"glyphicon glyphicon-list\"></span>
-        {% trans %}List{% endtrans %}
-    </a>
-    <a href=\"{{ path('" ~ route_name_prefix ~ "_new') }}\" class=\"btn btn-primary{%if '" ~ route_name_prefix ~ "_new' == app.request.attributes.get('_route')%} active{% endif %}\">
-        <span class=\"glyphicon glyphicon-plus\"></span>
-        {% trans %}New " ~ entity ~ "{% endtrans %}
-    </a>
-</div>
+{{"
+    <div class=\"btn-group\">
+        <a href=\"{{ path('" ~ route_name_prefix ~ "') }}\" class=\"btn btn-sm btn-default{%if '" ~ route_name_prefix ~ "' == app.request.attributes.get('_route')%} active{% endif %}\">
+            <span class=\"fa fa-list\"></span>
+            {% trans %}list{% endtrans %}
+        </a>
+        <a href=\"{{ path('" ~ route_name_prefix ~ "_new') }}\" class=\"btn btn-sm btn-primary{%if '" ~ route_name_prefix ~ "_new' == app.request.attributes.get('_route')%} active{% endif %}\">
+            <span class=\"fa fa-plus\"></span>
+            {% trans with { '%entity%' : '" ~ entity ~ "'} %}new{% endtrans %}
+        </a>
+    </div>
 
-{% if " ~ entity|lower ~ " is defined and " ~ entity|lower ~ ".id %}
-<div class=\"btn-group\">
-    <a class=\"btn btn-default {%if '" ~ route_name_prefix ~ "_show' == app.request.attributes.get('_route')%} active{% endif %}\" href=\"{{ path('" ~ route_name_prefix ~ "_show', {'id': " ~ entity|lower ~ ".id}) }}\">
-        {% trans %}Show{% endtrans %}
-    </a>
-    <a class=\"btn btn-default {%if '" ~ route_name_prefix ~ "_edit' == app.request.attributes.get('_route')%} active{% endif %}\" href=\"{{ path('" ~ route_name_prefix ~ "_edit', {'id': " ~ entity|lower ~ ".id}) }}\">
-        <span class=\"glyphicon glyphicon-edit\"></span>
-        {% trans %}Edit{% endtrans %}
-    </a>
-    <a class=\"btn btn-default {%if '" ~ route_name_prefix ~ "_delete' == app.request.attributes.get('_route')%} active{% endif %}\" href=\"{{ path('" ~ route_name_prefix ~ "_delete', {'id': " ~ entity|lower ~ ".id}) }}\">
-        <span class=\"glyphicon glyphicon-remove\"></span>
-        {% trans %}Delete{% endtrans %}
-    </a>
-</div>
-{% endif %}
+    {% if " ~ entity|lower ~ " is defined and " ~ entity|lower ~ ".id %}
+        <div class=\"btn-group\">
+            <a class=\"btn btn-sm btn-default {%if '" ~ route_name_prefix ~ "_show' == app.request.attributes.get('_route')%} active{% endif %}\" href=\"{{ path('" ~ route_name_prefix ~ "_show', {'id': " ~ entity|lower ~ ".id}) }}\">
+                <span class=\"fa fa-file-text-o\"></span>
+                {% trans %}show{% endtrans %}
+            </a>
+            <a class=\"btn btn-sm btn-default {%if '" ~ route_name_prefix ~ "_edit' == app.request.attributes.get('_route')%} active{% endif %}\" href=\"{{ path('" ~ route_name_prefix ~ "_edit', {'id': " ~ entity|lower ~ ".id}) }}\">
+                <span class=\"fa fa-pencil-square-o\"></span>
+                {% trans %}edit{% endtrans %}
+            </a>
+            <a class=\"btn btn-sm btn-default {%if '" ~ route_name_prefix ~ "_delete' == app.request.attributes.get('_route')%} active{% endif %}\" href=\"{{ path('" ~ route_name_prefix ~ "_delete', {'id': " ~ entity|lower ~ ".id}) }}\">
+                <span class=\"fa fa-trash-o\"></span>
+                {% trans %}delete{% endtrans %}
+            </a>
+        </div>
+    {% endif %}
 "}}
 
 {{"{% endblock contextualMenu %}"}}

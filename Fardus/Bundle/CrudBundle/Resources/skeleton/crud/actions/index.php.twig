@@ -81,10 +81,10 @@
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:index.html.twig', array(
             '{{ entity|lower }}List' => ${{ entity|lower }}List,
-            'pages' => $pages,
-            'page' => $page,
-            'search' => stripslashes($search),
-            'searchForm' => $this->createSearchForm(stripslashes($search))->createView(),
+            'pages'         => $pages,
+            'page'          => $page,
+            'search'        => stripslashes($search),
+            'searchForm'    => $this->createSearchForm(stripslashes($search))->createView(),
         ));
 {% endif %}
 {% endblock method_return %}
