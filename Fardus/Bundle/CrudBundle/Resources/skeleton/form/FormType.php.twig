@@ -5,9 +5,13 @@ namespace {{ namespace }}\Form{{ entity_namespace ? '\\' ~ entity_namespace : ''
 {% block use_statements %}
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 {% endblock use_statements %}
 
+/**
+ * Class {{ form_class }}
+ * @package {{ namespace }}\Form{{ entity_namespace ? '\\' ~ entity_namespace : '' }}
+ */
 {% block class_definition %}
 class {{ form_class }} extends AbstractType
 {% endblock class_definition %}
@@ -15,6 +19,8 @@ class {{ form_class }} extends AbstractType
 {% block class_body %}
     {% if fields|length > 0 %}
     /**
+     * buildForm
+     *
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -22,25 +28,28 @@ class {{ form_class }} extends AbstractType
     {
         $builder
         {%- for field in fields %}
-
             ->add('{{ field }}')
         {%- endfor %}
-
         ;
     }
     {% endif %}
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * configureOptions
+     *
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => '{{ namespace }}\Entity{{ entity_namespace ? '\\' ~ entity_namespace : '' }}\{{ entity_class }}'
+            'data_class' => '{{ namespace }}\Entity{{ entity_namespace ? '\\' ~ entity_namespace : '' }}\{{ entity_class }}',
+            'translation_domain' => {{ entity_class }},
         ));
     }
 
     /**
+     * getName
+     *
      * @return string
      */
     public function getName()

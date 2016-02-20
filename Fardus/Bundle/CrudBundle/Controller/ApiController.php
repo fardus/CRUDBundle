@@ -4,6 +4,7 @@ namespace Fardus\Bundle\CrudBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Description of ApiController
@@ -17,8 +18,8 @@ class ApiController extends Controller
      * Delete any entity.
      * @param string $entity
      * @param int $id
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @return Response
+     * @throws NotFoundHttpException
      */
     public function deleteAction($entity, $id)
     {
@@ -38,6 +39,7 @@ class ApiController extends Controller
         $content = json_encode(array(
             'status' => 'deleted',
         ));
+
         $response = new Response($content, 200);
 
         return $response;
