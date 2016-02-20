@@ -7,9 +7,9 @@
 {% block body %}
 {{ "{% block body -%}" }}
 <div class="panel panel-default">
-    <div class="panel-body search-form">
-        {{'{{'}} form(searchForm) {{'}}'}}
-    </div>
+
+    {{ "{% include '"~ bundle ~"::fardus.crud.search.html.twig' %}" }}
+
     <table class="table table-striped table-hover table-responsive">
         <thead>
             <tr>
@@ -19,8 +19,8 @@
 
                 {%- endfor %}
 
-                <th><span class="glyphicon glyphicon-edit" title="{{"{% trans %}"}}Edit{{"{% endtrans %}"}}"></span></th>
-                <th><span class="glyphicon glyphicon-remove" title="{{"{% trans %}"}}Delete{{"{% endtrans %}"}}"></span></th>
+                <th><span class="fa fa-edit" title="{{"{% trans %}"}}Edit{{"{% endtrans %}"}}"></span></th>
+                <th><span class="fa fa-trash-o" title="{{"{% trans %}"}}Delete{{"{% endtrans %}"}}"></span></th>
             </tr>
         </thead>
         <tbody>

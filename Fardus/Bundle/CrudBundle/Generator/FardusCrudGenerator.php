@@ -76,9 +76,9 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
         $this->generateTestClass();
         $this->generateConfiguration();
 
-        $this->copyBasicTemplates();
-
-        $this->generateCommonView($dir);
+        $this->copyBasicTemplates()
+            ->copyBasicTranslations()
+            ->generateCommonView($dir);
 
         if (in_array('delete', $this->actions)) {
             $this->generateDeleteView($dir);
@@ -87,21 +87,50 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
 
     /**
      * copyBasicTemplates
+     *
+     * @return static
+     */
+    protected function copyBasicTranslations()
+    {
+        $pathFiles = ["crud_common.en.yml", "crud_common.fr.yml"];
+
+        return $this->copyBasic('Resources/translations/', $pathFiles);
+    }
+
+    /**
+     * copyBasicTemplates
+     *
+     * @return static
      */
     protected function copyBasicTemplates()
     {
-        $dir = sprintf('%s/Resources/views', $this->bundle->getPath());
-        $base = "$dir/fardus.crud.base.html.twig";
+        $pathFiles = [
+            "fardus.crud.base.html.twig",
+            "fardus.crud.pagination.html.twig",
+            "fardus.crud.search.html.twig"
+        ];
 
-        if (!$this->filesystem->exists($base)) {
-            $this->filesystem->copy(__DIR__. '/../Resources/views/base.html.twig', $base);
+        return $this->copyBasic('Resources/views/', $pathFiles);
+    }
+
+    /**
+     * copyBasicTemplates
+     *
+     * @return static
+     */
+    protected function copyBasic($repository, array $pathFiles)
+    {
+        $dir = sprintf('%s/%s', $this->bundle->getPath(), $repository);
+
+        foreach ($pathFiles as $pathFile) {
+            $pathFileAbsolute = $dir.$pathFile;
+
+            if (!$this->filesystem->exists($pathFileAbsolute)) {
+                $this->filesystem->copy(__DIR__. '/../'.$repository.$pathFile, $pathFileAbsolute);
+            }
         }
 
-        $pagination = "$dir/fardus.crud.pagination.html.twig";
-
-        if (!$this->filesystem->exists($pagination)) {
-            $this->filesystem->copy(__DIR__. '/../Resources/views/pagination.html.twig', $pagination);
-        }
+        return $this;
     }
 
     /**
