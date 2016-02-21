@@ -1,51 +1,51 @@
 {% if 'index' in actions %}
 {{ route_name_prefix }}_root:
-    pattern:  /
+    path:  /
     defaults:
         _controller: FrameworkBundle:Redirect:redirect
         route: {{ route_name_prefix }}
         permanent: true
         
 {{ route_name_prefix }}:
-    pattern:  /list/{page}/{search}
+    path:  /list/{page}/{search}
     defaults: { _controller: "{{ bundle }}:{{ entity }}:index", page: 1, search: '' }
 {% endif %}
 
 {% if 'show' in actions %}
 {{ route_name_prefix }}_show:
-    pattern:  /{id}/show
+    path:  /{id}/show
     defaults: { _controller: "{{ bundle }}:{{ entity }}:show" }
 {% endif %}
 
 {% if 'new' in actions %}
 {{ route_name_prefix }}_new:
-    pattern:  /new
+    path:  /new
     defaults: { _controller: "{{ bundle }}:{{ entity }}:new" }
 
 {{ route_name_prefix }}_create:
-    pattern:  /create
+    path:  /create
     defaults: { _controller: "{{ bundle }}:{{ entity }}:create" }
-    requirements: { _method: post }
+    requirements: { methods: post }
 {% endif %}
 
 {% if 'edit' in actions %}
 {{ route_name_prefix }}_edit:
-    pattern:  /{id}/edit
+    path:  /{id}/edit
     defaults: { _controller: "{{ bundle }}:{{ entity }}:edit" }
 
 {{ route_name_prefix }}_update:
-    pattern:  /{id}/update
+    path:  /{id}/update
     defaults: { _controller: "{{ bundle }}:{{ entity }}:update" }
-    requirements: { _method: post|put }
+    requirements: { methods: post|put }
 {% endif %}
 
 {% if 'delete' in actions %}
 {{ route_name_prefix }}_delete:
-    pattern:  /{id}/delete
+    path:  /{id}/delete
     defaults: { _controller: "{{ bundle }}:{{ entity }}:delete" }
 {% endif %}
 
 {{ route_name_prefix }}_search:
-    pattern:  /search
+    path:  /search
     defaults: { _controller: "{{ bundle }}:{{ entity }}:search" }
-    requirements: { _method: post }
+    requirements: { methods: post }

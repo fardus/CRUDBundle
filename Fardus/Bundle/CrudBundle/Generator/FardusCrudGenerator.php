@@ -32,11 +32,22 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
      * @param array                                                $needWriteActions
      * @param                                                      $forceOverwrite
      */
-    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions, $forceOverwrite)
-    {
-        $this->routePrefix = $routePrefix;
+    public function generate(
+        BundleInterface $bundle,
+        $entity,
+        ClassMetadataInfo $metadata,
+        $format,
+        $routePrefix,
+        $needWriteActions,
+        $forceOverwrite
+    ) {
+        $this->routePrefix     = $routePrefix;
         $this->routeNamePrefix = str_replace('/', '_', $routePrefix);
-        $this->actions = $needWriteActions ? array('index', 'show', 'new', 'edit', 'delete', 'search') : array('index', 'show', 'search');
+        $this->actions         = $needWriteActions ? ['index', 'show', 'new', 'edit', 'delete', 'search'] : [
+            'index',
+            'show',
+            'search',
+        ];
 
         if (count($metadata->identifier) > 1) {
             throw new \RuntimeException('The CRUD generator does not support entity classes with multiple primary keys.');
@@ -77,8 +88,9 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
         $this->generateConfiguration();
 
         $this->copyBasicTemplates()
-            ->copyBasicTranslations()
-            ->generateCommonView($dir);
+             ->copyBasicTranslations()
+             ->generateCommonView($dir)
+        ;
 
         if (in_array('delete', $this->actions)) {
             $this->generateDeleteView($dir);
@@ -92,7 +104,10 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
      */
     protected function copyBasicTranslations()
     {
-        $pathFiles = ["crud_common.en.yml", "crud_common.fr.yml"];
+        $pathFiles = [
+            "crud_common.en.yml" => "crud_common.en.yml",
+            "crud_common.fr.yml" => "crud_common.fr.yml",
+        ];
 
         return $this->copyBasic('Resources/translations/', $pathFiles);
     }
@@ -105,9 +120,9 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
     protected function copyBasicTemplates()
     {
         $pathFiles = [
-            "fardus.crud.base.html.twig",
-            "fardus.crud.pagination.html.twig",
-            "fardus.crud.search.html.twig"
+            "base.html.twig"       => "fardus.crud.base.html.twig",
+            "pagination.html.twig" => "fardus.crud.pagination.html.twig",
+            "search.html.twig"     => "fardus.crud.search.html.twig",
         ];
 
         return $this->copyBasic('Resources/views/', $pathFiles);
@@ -122,11 +137,11 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
     {
         $dir = sprintf('%s/%s', $this->bundle->getPath(), $repository);
 
-        foreach ($pathFiles as $pathFile) {
+        foreach ($pathFiles as $baseFile => $pathFile) {
             $pathFileAbsolute = $dir.$pathFile;
 
             if (!$this->filesystem->exists($pathFileAbsolute)) {
-                $this->filesystem->copy(__DIR__. '/../'.$repository.$pathFile, $pathFileAbsolute);
+                $this->filesystem->copy(__DIR__.'/../'.$repository.$baseFile, $pathFileAbsolute);
             }
         }
 
@@ -140,13 +155,13 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
      */
     protected function generateDeleteView($dir)
     {
-        $this->renderFile('crud/views/delete.html.twig.twig', $dir . '/delete.html.twig', array(
+        $this->renderFile('crud/views/delete.html.twig.twig', $dir.'/delete.html.twig', [
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,
             'bundle'            => $this->bundle->getName(),
             'actions'           => $this->actions,
-        ));
+        ]);
     }
 
     /**
@@ -156,13 +171,13 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
      */
     protected function generateCommonView($dir)
     {
-        $this->renderFile('crud/views/common.html.twig.twig', $dir . '/common.html.twig', array(
+        $this->renderFile('crud/views/common.html.twig.twig', $dir.'/common.html.twig', [
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,
             'bundle'            => $this->bundle->getName(),
             'actions'           => $this->actions,
-        ));
+        ]);
     }
 
     /**
@@ -174,8 +189,8 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
     {
         $dir = $this->bundle->getPath();
 
-        $parts = explode('\\', $this->entity);
-        $entityClass = array_pop($parts);
+        $parts           = explode('\\', $this->entity);
+        $entityClass     = array_pop($parts);
         $entityNamespace = implode('\\', $parts);
 
         $target = sprintf(
@@ -189,7 +204,7 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
             throw new \RuntimeException('Unable to generate the controller as it already exists.');
         }
 
-        $this->renderFile('crud/controller.php.twig', $target, array(
+        $this->renderFile('crud/controller.php.twig', $target, [
             'actions'           => $this->actions,
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
@@ -200,7 +215,7 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
             'entity_namespace'  => $entityNamespace,
             'format'            => $this->format,
             'fields'            => $this->metadata->fieldMappings,
-        ));
+        ]);
     }
 
     /**
