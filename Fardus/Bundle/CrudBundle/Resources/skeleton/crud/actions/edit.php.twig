@@ -58,7 +58,7 @@
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', Type\SubmitType::class, array('label' => 'Update'));
 
         return $form;
     }

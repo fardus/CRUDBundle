@@ -13,18 +13,10 @@
 {% endblock phpdoc_method_annotations %}
      */
 {% block method_definition %}
-    public function showAction($id)
+    public function showAction({{ entity }} ${{ entity|lower }})
 {% endblock method_definition %}
     {
-{% block method_body %}
-        $manager = $this->getDoctrine()->getManager();
-
-        ${{ entity|lower }} = $manager->getRepository('{{ bundle }}:{{ entity }}')->find($id);
-
-        if (!${{ entity|lower }}) {
-            throw $this->createNotFoundException('Unable to find {{ entity }} entity.');
-        }
-{% endblock method_body %}
+{% block method_body '' %}
 
 {% block method_return %}
 {% if 'annotation' == format %}

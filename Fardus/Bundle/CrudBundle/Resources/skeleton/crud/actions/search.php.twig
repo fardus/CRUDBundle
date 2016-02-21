@@ -43,10 +43,10 @@
         return $this->createFormBuilder($data)
                 ->setAction($this->generateUrl('{{ route_name_prefix }}_search'))
                 ->setMethod('post')
-                ->add('q', 'search', array(
+                ->add('q', Type\SearchType::class, array(
                     'label' => FALSE,
                 ))
-                ->add('submit', 'submit', array('label' => 'Search'))
+                ->add('submit', Type\SubmitType::class, array('label' => 'Search'))
                 ->getForm()
         ;
     }

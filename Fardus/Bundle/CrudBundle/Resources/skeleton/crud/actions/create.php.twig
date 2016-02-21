@@ -2,7 +2,7 @@
 {% block phpdoc_method_header %}
      * Creates a new {{ entity }} entity.
 {% endblock phpdoc_method_header %}
-     *
+     * @param Request $request
 {% block phpdoc_method_annotations %}
 {% if 'annotation' == format %}
      * @Route("/", name="{{ route_name_prefix }}_create")
@@ -67,7 +67,7 @@
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('submit', Type\SubmitType::class, array('label' => 'Create'));
 
         return $form;
     }
