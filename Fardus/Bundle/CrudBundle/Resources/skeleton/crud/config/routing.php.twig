@@ -38,7 +38,7 @@ $collection->add('{{ route_name_prefix }}_new', new Route('/new', array(
 $collection->add('{{ route_name_prefix }}_create', new Route(
     '/create',
     array('_controller' => '{{ bundle }}:{{ entity }}:create'),
-    array('_method' => 'post')
+    array('methods' => 'post')
 ));
 {% endif %}
 
@@ -50,7 +50,7 @@ $collection->add('{{ route_name_prefix }}_edit', new Route('/{id}/edit', array(
 $collection->add('{{ route_name_prefix }}_update', new Route(
     '/{id}/update',
     array('_controller' => '{{ bundle }}:{{ entity }}:update'),
-    array('_method' => 'post|put')
+    array('methods' => 'post|put')
 ));
 {% endif %}
 
@@ -64,7 +64,7 @@ $collection->add('{{ route_name_prefix }}_delete', new Route(
 $collection->add('{{ route_name_prefix }}_search', new Route(
     '/search',
     array('_controller' => '{{ bundle }}:{{ entity }}:search'),
-    array('_method' => 'post')
+    array('methods' => 'post')
 ));
 {% endblock body %}
 
