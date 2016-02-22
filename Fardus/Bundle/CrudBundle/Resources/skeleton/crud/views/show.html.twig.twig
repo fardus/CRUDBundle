@@ -1,16 +1,17 @@
 {% block extends %}
-    {{ "{% extends '" ~ bundle ~ ":" ~ entity ~ ":common.html.twig' %}" }}
+{{ "{% extends '" ~ bundle ~ ":" ~ entity ~ ":common.html.twig' %}" }}
 {% endblock extends %}
 
 {{ "\{% set title = '" ~ entity ~ "'|trans %\}" }}
 
 {% block body %}
-    {{ "{% block body %}" }}
+{{ "{% block body %}" }}
+
+    <dl class="dl-horizontal">
     {%- for field, metadata in fields %}
 
-    <div class="crud-field">
-        <div class="crud-field-label">{{ '\{\% trans \%\}' }}{{ field|capitalize }}{{ '\{\% endtrans \%\}' }}</div>
-        <div class="crud-field-value">
+        <dt>{{ '\{\% trans \%\}' }}{{ field|capitalize }}{{ '\{\% endtrans \%\}' }}</dt>
+        <dd>
             {%- if metadata.type in ['date', 'datetime'] %}
 
             {{ '{% if ' ~ entity|lower ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity|lower ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% else %}-{% endif %}' }}
@@ -21,11 +22,10 @@
 
             {%- endif %}
 
-        </div>
-    </div>
+        </dd>
 
     {%- endfor %}
+    </dl>
 
-
-    {{ "{% endblock %}" }}
+{{ "{% endblock %}" }}
 {% endblock body %}
