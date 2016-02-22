@@ -46,12 +46,12 @@
 
                 <td>
                     <a href="{{"{{ path('" ~ route_name_prefix ~ "_edit', {'id': " ~ entity|lower ~ ".id}) }}"}}" title="{{"{% trans %}"}}Edit{{"{% endtrans %}"}}">
-                        <span class="glyphicon glyphicon-edit"></span>
+                        <span class="fa fa-edit"></span>
                     </a>
                 </td>
                 <td>
                     <a href="{{"{{ path('" ~ route_name_prefix ~ "_delete', {'id': " ~ entity|lower ~ ".id}) }}"}}" class="crud-entity-delete" title="{{"{% trans %}"}}Delete{{"{% endtrans %}"}}" data-entity="{{ bundle }}:{{ entity }}" data-id="{{ '\{\{ ' ~ entity|lower ~ '.id \}\}' }}">
-                        <span class="glyphicon glyphicon-remove"></span>
+                        <span class="fa fa-trash"></span>
                     </a>
                 </td>
 

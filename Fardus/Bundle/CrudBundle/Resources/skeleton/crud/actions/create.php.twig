@@ -62,7 +62,7 @@
     */
     private function createCreateForm({{ entity_class }} ${{ entity|lower }})
     {
-        $form = $this->createForm(new {{ entity_class }}Type(), ${{ entity|lower }}, array(
+        $form = $this->createForm({{ entity_class }}Type::class, ${{ entity|lower }}, array(
             'action' => $this->generateUrl('{{ route_name_prefix }}_create'),
             'method' => 'POST',
         ));
