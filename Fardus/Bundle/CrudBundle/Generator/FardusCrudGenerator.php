@@ -5,6 +5,7 @@ namespace Fardus\Bundle\CrudBundle\Generator;
 use Sensio\Bundle\GeneratorBundle\Generator\DoctrineCrudGenerator;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Symfony\Bridge\Monolog\Logger;
 
 /**
  * Description of FardusCrudGenerator
@@ -14,6 +15,11 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 class FardusCrudGenerator extends DoctrineCrudGenerator
 {
     /**
+     * @var Logger
+     */
+    protected $logger;
+
+    /**
      * @var BundleInterface
      */
     protected $bundle;
@@ -22,6 +28,11 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
      * @var ClassMetadataInfo
      */
     protected $metadata;
+
+    /**
+     * @var array
+     */
+    protected $options;
 
     /**
      * @param \Symfony\Component\HttpKernel\Bundle\BundleInterface $bundle
@@ -177,6 +188,7 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
             'entity'            => $this->entity,
             'bundle'            => $this->bundle->getName(),
             'actions'           => $this->actions,
+            'options'           => $this->options,
         ]);
     }
 
@@ -237,5 +249,38 @@ class FardusCrudGenerator extends DoctrineCrudGenerator
                 break;
         }
     }
+
+    /**
+     * Set Logger
+     *
+     * @param Logger $logger
+     *
+     * @return FardusCrudGenerator
+     */
+    public function setLogger(Logger $logger)
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
+
+    /**
+     * Set Options
+     *
+     * @param array $options
+     *
+     * @return FardusCrudGenerator
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = [
+            'commons' => ['actions' => 'button']
+        ];
+
+        $this->options = array_merge($this->options, $options);
+
+        return $this;
+    }
+
 
 }

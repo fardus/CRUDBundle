@@ -1,0 +1,4 @@
+fardus_crud:
+    options:
+        commons:
+            actions: button

@@ -30,9 +30,11 @@ class FardusCrudCommand extends GenerateDoctrineCrudCommand
      */
     protected function getGenerator(BundleInterface $bundle = null)
     {
-        $generator = new FardusCrudGenerator($this->getFilesystem(), '');
+        /** @var FardusCrudGenerator $generator */
+        $generator = $this->getContainer()->get('fardus_crud.generator');
         $generator->setSkeletonDirs(__DIR__ . '/../Resources/skeleton');
         $this->setGenerator($generator);
+
         return parent::getGenerator($bundle);
     }
 

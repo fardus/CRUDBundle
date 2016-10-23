@@ -1,0 +1,10 @@
+parameters:
+
+services:
+    fardus_crud.generator:
+        lazy: true
+	    class: Fardus\Bundle\CrudBundle\Generator\FardusCrudGenerator
+	    arguments: [ @filesystem]
+	    calls:
+	        - [setLogger, [@logger]]
+        tags:
